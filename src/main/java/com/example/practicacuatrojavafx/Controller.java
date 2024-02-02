@@ -68,6 +68,8 @@ public class Controller implements Initializable {
     private ObservableList<CheckBox> listaDeCheckBoxes;
     private final int LIMITE_HORAS = 600;
     private int horas = 0;
+    private ControllerSecundarioMostrarV2 controler;
+
 
 
     @FXML
@@ -119,11 +121,77 @@ public class Controller implements Initializable {
 //    }
 
 
+//METODO GUARDAR QUE LLAMA AL CONTROLER SECUNDARIO CON EL BOTON DE MOSTRAR DATOS
+
+//    @FXML
+//    void Guardar(ActionEvent event) {
+//
+//        String nombre;
+//        String apellidos;
+//        String nif;
+//        String codigoPostal;
+//        String email;
+//        ArrayList<Modulo> modulos = new ArrayList<>();
+//        Modulo modulo;
+//        Alumno alumno;
+//
+//        nombre = tfNombre.getText();
+//        apellidos = tfApellidos.getText();
+//        nif = tfNif.getText();
+//        codigoPostal = tfCodigoPostal.getText();
+//        email = tfEmail.getText();
+//
+//
+//        horas = 0;
+//        modulos = checkBoxesSelecionados();
+//        if (horas > LIMITE_HORAS) {
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Informacion");
+//            alert.setHeaderText(null);
+//            alert.setContentText("Horas Excedidas");
+//            alert.showAndWait();
+//
+//        } else {
+//            alumno = new Alumno(nombre, apellidos, nif, codigoPostal, email, modulos);
+//            btCancelar.setDisable(true);
+//            try {
+//                // Cargo la vista
+//                FXMLLoader loader = new FXMLLoader(Application.class.getResource("VentanaMostrar.fxml"));
+//                // Cargo la ventana
+//                Parent root = loader.load();
+//                Stage stage = new Stage();
+//                // Estamos pasando el alumno a la instancia del stage
+//                stage.setUserData(alumno);
+//                // Creo el Scene
+//                Scene scene = new Scene(root);
+//
+//                stage.setTitle("Datos matricula alumnado");
+//                stage.initModality(Modality.APPLICATION_MODAL);
+//                stage.setScene(scene);
+//                stage.showAndWait();
+//            } catch (IOException e) {
+//                Alert alert = new Alert(Alert.AlertType.ERROR);
+//                alert.setHeaderText(null);
+//                alert.setTitle("Error");
+//                alert.setContentText(e.getMessage());
+//                System.out.println(e.getMessage().toString());
+//                alert.showAndWait();
+//            }
+//
+//
+//        }
+//
+//
+//
+//
+//    }
 
 
+
+
+    //Metodo Guardar que intenta mostrar los datos directamente sin usar el boton de mostrar datos
     @FXML
     void Guardar(ActionEvent event) {
-
         String nombre;
         String apellidos;
         String nif;
@@ -151,36 +219,11 @@ public class Controller implements Initializable {
 
         } else {
             alumno = new Alumno(nombre, apellidos, nif, codigoPostal, email, modulos);
-            btCancelar.setDisable(true);
-            try {
-                // Cargo la vista
-                FXMLLoader loader = new FXMLLoader(Application.class.getResource("VentanaMostrar.fxml"));
-                // Cargo la ventana
-                Parent root = loader.load();
-                Stage stage = new Stage();
-                // Estamos pasando el alumno a la instancia del stage
-                stage.setUserData(alumno);
-                // Creo el Scene
-                Scene scene = new Scene(root);
-
-                stage.setTitle("Datos matricula alumnado");
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.setScene(scene);
-                stage.showAndWait();
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText(null);
-                alert.setTitle("Error");
-                alert.setContentText(e.getMessage());
-                System.out.println(e.getMessage().toString());
-                alert.showAndWait();
-            }
+            controler=new ControllerSecundarioMostrarV2();
+            controler.RecibirDatos(alumno);
 
 
         }
-
-
-
 
     }
 
