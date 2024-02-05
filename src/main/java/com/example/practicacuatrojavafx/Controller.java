@@ -69,16 +69,29 @@ public class Controller implements Initializable {
     private final int LIMITE_HORAS = 600;
     private int horas = 0;
     private ControllerSecundarioMostrarV2 controler;
+    private String[] asignaturas={"Programacion de Servicios y Procesos", "Programacion", "Desarrollo de Interfaces","Acceso a Datos","Programacion Multimedia y Dispositivos Moviles","Base de Datos"};
 
 
 
     @FXML
     void Cancelar(ActionEvent event) {
+        tfNombre.setText("");
+        tfApellidos.setText("");
+        tfNif.setText("");
+        tfCodigoPostal.setText("");
+        tfEmail.setText("");
+        desabilitarCheckBox();
+        tfNombre.requestFocus();
+    }
 
+    private void desabilitarCheckBox() {
+        for(CheckBox ch:listaDeCheckBoxes){
+            ch.setSelected(false);
+        }
     }
 
 
-//Este metodo es la primera parte del ejercicio
+//Este metodo es la primera parte del ejercicio con una sola ventana
 //    @FXML
 //    void Guardar(ActionEvent event) {
 //
@@ -189,8 +202,8 @@ public class Controller implements Initializable {
 
 
 
-    //Metodo Guardar que intenta mostrar los datos directamente sin usar el boton de mostrar datos
-    @FXML
+    //Metodo Guardar que  muestra los datos directamente sin usar el boton de mostrar datos
+     @FXML
     void Guardar(ActionEvent event) {
         String nombre;
         String apellidos;
@@ -211,37 +224,57 @@ public class Controller implements Initializable {
         horas = 0;
         modulos = checkBoxesSelecionados();
         if (horas > LIMITE_HORAS) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Informacion");
-            alert.setHeaderText(null);
-            alert.setContentText("Horas Excedidas");
-            alert.showAndWait();
+            CrearAlerta("INFORMATION","Informacion","Horas Excedidas");
+
 
         } else {
             alumno = new Alumno(nombre, apellidos, nif, codigoPostal, email, modulos);
-            controler=new ControllerSecundarioMostrarV2();
-            controler.RecibirDatos(alumno);
+            try{
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("VentanaMostrarv2.fxml"));
+                Scene scene = new Scene(loader.load());
+                Stage stage = new Stage();
+                stage.setTitle("Informacion del alumno");
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(scene);
 
+                //loader.getController(): Este método devuelve el controlador asociado al archivo FXML que se está cargando
+                ControllerSecundarioMostrarV2 controller=loader.getController();
+                controller.MostrarDatos(alumno);
+                stage.showAndWait();
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
         }
-
     }
 
     private ArrayList<Modulo> checkBoxesSelecionados() {
         ArrayList<Modulo> modulos = new ArrayList<>();
         Modulo modulo;
         horas = 0;
+        int contador=0;
 
         for (CheckBox checkBox : listaDeCheckBoxes) {
 
             if (checkBox.isSelected()) {
-                modulo = new Modulo(checkBox.getText(), (Integer) checkBox.getUserData());
+               // modulo = new Modulo(checkBox.getText(), (Integer) checkBox.getUserData());
+                modulo = new Modulo(asignaturas[contador], (Integer) checkBox.getUserData());
+
                 modulos.add(modulo);
                 horas += (Integer) checkBox.getUserData();
 
             }
+            contador++;
         }
         return modulos;
+    }
+    private void CrearAlerta(String tipoAlerta, String titulo, String mensaje) {
+        Alert alert=new Alert(Alert.AlertType.valueOf(tipoAlerta));
+        alert.setHeaderText(null);
+        alert.setTitle(titulo);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
     @FXML
@@ -263,13 +296,14 @@ public class Controller implements Initializable {
 //        chDI=new CheckBox();
 //        chPMDM=new CheckBox();
 //        chPSP=new CheckBox();
-
-        chAD.setUserData(157);
-        chPROG.setUserData(240);
-        chBD.setUserData(187);
-        chDI.setUserData(140);
-        chPMDM.setUserData(123);
         chPSP.setUserData(70);
+        chPROG.setUserData(240);
+        chDI.setUserData(140);
+        chAD.setUserData(157);
+        chPMDM.setUserData(123);
+        chBD.setUserData(187);
+
+
 
         listaDeCheckBoxes = FXCollections.observableArrayList();
 
@@ -282,13 +316,14 @@ public class Controller implements Initializable {
         });
 
         //hasta aqui
-
-        listaDeCheckBoxes.add(chAD);
-        listaDeCheckBoxes.add(chPROG);
-        listaDeCheckBoxes.add(chBD);
-        listaDeCheckBoxes.add(chDI);
-        listaDeCheckBoxes.add(chPMDM);
         listaDeCheckBoxes.add(chPSP);
+        listaDeCheckBoxes.add(chPROG);
+        listaDeCheckBoxes.add(chDI);
+        listaDeCheckBoxes.add(chAD);
+        listaDeCheckBoxes.add(chPMDM);
+        listaDeCheckBoxes.add(chBD);
+
+
 
 
         Tooltip tooltipAD = new Tooltip(chAD.getUserData().toString()+" horas");
